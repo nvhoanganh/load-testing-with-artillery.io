@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 require('dotenv').config();
+const { execSync } = require('child_process');
 
 const fs = require('fs');
 const TokenReplacer = require('chance-token-replacer');
@@ -21,7 +22,8 @@ async function seed(config) {
 	if (config.seed) {
 		const pool = new Pool();
 		for (let u = 0; u < config.seed.length; u++) {
-			const { skip, command, count } = config.seed[u];
+			const { name, skip, command, count } = config.seed[u];
+			console.log(`------------ ${name} --------------`);
 			if (!skip) {
 				for (let index = 0; index < count; index++) {
 					const processedCmd = replacer.processString(command);
@@ -34,15 +36,4 @@ async function seed(config) {
 		}
 		await pool.end();
 	}
-}
-
-async function connectToDb() {
-	// pools will use environment variables
-	// for connection information
-	const pool = new Pool();
-
-	// you can also use async/await
-	const res = await pool.query('SELECT * FROM public."Users"');
-	await pool.end();
-	console.log(res.rows);
 }
