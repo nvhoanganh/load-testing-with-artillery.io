@@ -1,0 +1,33 @@
+{
+	"name": "artilleryloadtester",
+	"version": "0.0.17",
+	"description": "",
+	"main": "./bin/index.js",
+	"bin": {
+		"artilleryloadtester": "./bin/index.js"
+	},
+	"scripts": {},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nvhoanganh/load-testing-with-artillery.io"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"artillery": "^1.6.1",
+		"boxen": "^4.2.0",
+		"chalk": "^3.0.0",
+		"chance": "^1.1.6",
+		"chance-token-replacer": "git+https://github.com/nvhoanganh/chance-token-replacer.git",
+		"cheerio": "^1.0.0-rc.3",
+		"dotenv": "^8.2.0",
+		"eslint": "^5.12.0",
+		"eslint-plugin-promise": "^4.0.1",
+		"gauge": "^3.0.0",
+		"pg": "^8.3.0",
+		"ramda": "^0.27.0",
+		"yaml": "^1.10.0",
+		"yargs": "^15.3.1"
+	},
+	"devDependencies": {}
+}
