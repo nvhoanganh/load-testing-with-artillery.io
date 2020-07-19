@@ -1,5 +1,14 @@
 # load-testing-with-artillery.io
-1. run `export PGPASSWORD='password'; pg_dump -U postgres -d verinote-localdev -f db.sql`
-1. create new database `export PGPASSWORD='password'; psql -U postgres -c "CREATE DATABASE verinoteloadtest"`
-1. restore `psql -U postgres -d verinoteloadtest -f localdev.sql`
-1. drop `psql -U postgres -c "DROP DATABASE verinoteloadtest"`
+1. run `npm install`
+1. create `.env` file and populate with the following information
+
+```bash
+PGUSER=postgres
+PGHOST=localhost
+PGPASSWORD=password
+PGDATABASE=dbname
+PGPORT=5432
+```
+1. update init.sh with all command which will create a blank database for load testing
+1. update `config.yml` accordingly
+1. run `node .`
