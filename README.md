@@ -11,4 +11,5 @@ PGPORT=5432
 ```
 1. update init.sh with all command which will create a blank database for load testing
 1. update `config.yml` accordingly
-1. run `node .`
+1. run `node .` to seed the db
+1. run `artillery run config.yml` to run the load test

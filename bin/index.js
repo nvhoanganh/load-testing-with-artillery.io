@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 require('dotenv').config();
-const { execSync } = require('child_process');
 
 const fs = require('fs');
 const TokenReplacer = require('chance-token-replacer');

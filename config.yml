@@ -1,15 +1,119 @@
 seed:
   - name: Create users
-    count: 100
+    count: 1000
     skip: false
     command:
       INSERT INTO public."Users" ("CreatedBy","Created","FirstName","LastName","Email","Phone","InterfaceTimeZone","RequestedAccessControlGroup","AccessControlGroup","Disabled")
       Values (-1, NOW(), '<@word@>','<@word@>','!1.!2@<@domain@>','<@phone@>', '<@pickone#["AEST","AWST","LHST","ACST"]@>', <@pickone#[0,1,2,3,4]@>, <@pickone#[0,1,2,3,4]@>, false)
   - name: Create Notes
-    count: 100
+    count: 10000
     skip: false
     command:
       INSERT INTO public."Notes" ("CreatedBy", "Created", "LastModifiedBy", "LastModified", "Title", "OwnerId", "SessionId", "DeviceLatitude", "DeviceLongitude",
       "DeclaredStart", "DeclaredLatitude", "DeclaredLongitude", "Body", "IsPrivate", "IsQuick", "DeclaredLocation", "ProtectiveMarkingId", "Keywords")
       Values ('<@integer#{"min":1, "max":100 }@>', NOW(),'<@integer#{"min":1, "max":100 }@>', NOW(),'<@sentence@>', <@integer#{"min":1, "max":100 }@>,0, <@latitude@>, <@longitude@>,
       NOW(),<@latitude@>,<@longitude@>, '<@paragraph#{"sentences":5}@>',<@bool@>, <@bool@>, '<@word@>', <@integer#{"min":1, "max":4 }@>, '{}')
+config:
+  target: "http://localhost:5000/api"
+  phases:
+    - duration: 120
+      arrivalRate: 1
+      rampTo: 5
+      name: "Warm up the application"
+    #- duration: 300
+    #  arrivalRate: 20
+    #  name: "Sustained max load"  
+  processor: "./random-gen.js"
+  payload:
+    path: "keywords.csv"
+    fields:
+      - "keywords"
+scenarios:
+  - name: "login and create a note"
+    weight: 2
+    flow:
+      - function: "generateRandomData"
+      - get:
+          url: "/Configuration"
+          headers:
+            X-LoadTestApiKey: "6b818485-9994-4544-83c7-0acdb1fc5ba7"
+            X-LoadTestUserId: "2"
+            X-LoadTestSurname: "nguyen"
+            X-LoadTestEmail: "nvhoanganh1909@gmail.com"
+      - get:
+          url: "/User"
+          headers:
+            X-LoadTestApiKey: "6b818485-9994-4544-83c7-0acdb1fc5ba7"
+            X-LoadTestUserId: "2"
+            X-LoadTestSurname: "nguyen"
+            X-LoadTestEmail: "nvhoanganh1909@gmail.com"
+      - get:
+          url: "/Note/{{ noteDate }}"
+          headers:
+            X-LoadTestApiKey: "6b818485-9994-4544-83c7-0acdb1fc5ba7"
+            X-LoadTestUserId: "2"
+            X-LoadTestSurname: "nguyen"
+            X-LoadTestEmail: "nvhoanganh1909@gmail.com"
+      - get:
+          url: "/Note/month?date={{ noteDate }}"
+          headers:
+            X-LoadTestApiKey: "6b818485-9994-4544-83c7-0acdb1fc5ba7"
+            X-LoadTestUserId: "2"
+            X-LoadTestSurname: "nguyen"
+            X-LoadTestEmail: "nvhoanganh1909@gmail.com"
+      - get:
+          url: "/Classification/protectiveMarkings"
+          headers:
+            X-LoadTestApiKey: "6b818485-9994-4544-83c7-0acdb1fc5ba7"
+            X-LoadTestUserId: "2"
+            X-LoadTestSurname: "nguyen"
+            X-LoadTestEmail: "nvhoanganh1909@gmail.com"
+      - get:
+          url: "/Classification/informationManagementMarkers"
+          headers:
+            X-LoadTestApiKey: "6b818485-9994-4544-83c7-0acdb1fc5ba7"
+            X-LoadTestUserId: "2"
+            X-LoadTestSurname: "nguyen"
+            X-LoadTestEmail: "nvhoanganh1909@gmail.com"
+      - think: 5
+      - post:
+          url: "/Note"
+          headers:
+            X-LoadTestApiKey: "6b818485-9994-4544-83c7-0acdb1fc5ba7"
+            X-LoadTestUserId: "2"
+            X-LoadTestSurname: "nguyen"
+            X-LoadTestEmail: "nvhoanganh1909@gmail.com"
+          json:
+            title: "{{ title }}"
+            deviceLatitude: "{{ deviceLatitude }}"
+            deviceLongitude: "{{ deviceLongitude }}"
+            declaredStart: "{{ declaredStart }}"
+            declaredLatitude: "{{ declaredLatitude }}"
+            declaredLongitude: "{{ declaredLongitude }}"
+            body: "{{ body }}"
+            isPrivate: "{{ isPrivate }}"
+            isQuick: "{{ isQuick }}"
+            declaredLocation: "{{ declaredLocation }}"
+            protectiveMarkingId: "{{ protectiveMarkingId }}"
+            informationManagementMarkerId: "{{ informationManagementMarkerId }}"
+            keywords: "{{ keywords }}"
+            deviceLocation: "{{ deviceLocation }}"
+  - name: "login, search note by month"
+    weight: 3
+    flow:
+      - function: "generateRandomData"
+      - get:
+          url: "/Note/month?date={{ noteDate }}"
+          headers:
+            X-LoadTestApiKey: "6b818485-9994-4544-83c7-0acdb1fc5ba7"
+            X-LoadTestUserId: "2"
+            X-LoadTestSurname: "nguyen"
+            X-LoadTestEmail: "nvhoanganh1909@gmail.com"
+      - get:
+          url: "/Note/{{ noteDate }}"
+          headers:
+            X-LoadTestApiKey: "6b818485-9994-4544-83c7-0acdb1fc5ba7"
+            X-LoadTestUserId: "2"
+            X-LoadTestSurname: "nguyen"
+            X-LoadTestEmail: "nvhoanganh1909@gmail.com"
+      - think: 3
