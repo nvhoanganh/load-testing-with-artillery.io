@@ -20,9 +20,9 @@ config:
       arrivalRate: 1
       rampTo: 5
       name: "Warm up the application"
-    #- duration: 300
-    #  arrivalRate: 20
-    #  name: "Sustained max load"  
+    - duration: 300
+      arrivalRate: 20
+      name: "Sustained max load"  
   processor: "./random-gen.js"
   payload:
     path: "keywords.csv"
